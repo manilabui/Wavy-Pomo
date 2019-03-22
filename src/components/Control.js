@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class Control extends Component {
 	playIcon = <span aria-label='Play Button'>▶︎</span>
 	stopIcon = <span aria-label='Stop Button'>◼</span>
-  getIcon = () => this.props.playButton ? this.playIcon : this.stopIcon
+  getIcon = () => this.props.playButtonOn ? this.playIcon : this.stopIcon
 
   render() {
     return (
@@ -18,7 +18,7 @@ class Control extends Component {
 }
 
 Control.propTypes = {
-	playButton: PropTypes.bool.isRequired,
+	playButtonOn: PropTypes.bool.isRequired,
 	playOrStop: PropTypes.func.isRequired
 }
 
