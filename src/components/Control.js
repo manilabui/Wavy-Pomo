@@ -5,7 +5,7 @@ class Control extends Component {
 	playIcon = <span aria-label='Play Button'>▶︎</span>
 	stopIcon = <span aria-label='Stop Button'>◼</span>
   getIcon = () => this.props.playButtonOn ? this.playIcon : this.stopIcon
-
+ 
   render() {
     return (
       <div>

@@ -11,49 +11,70 @@ class App extends Component {
     this.state = {
       quote: 'My greatest award is what I’m about to do.',
       playButtonOn: true,
-      currTimer: 'work',
       timerRunning: false,
       display: '25:00',
-      workDuration: 0.1,
+      workTimerOn: true,
+      workDuration: 25,
       shortBreakDuration: 5,
-      longBreakDuration: 15
+      longBreakDuration: 15,
+      workCycle: 1
     }
   }
 
-  startTimer = duration => {
-    this.setState({ timerRunning: true });
+  addLeadingZero = num => num < 10 ? '0' + num : num;
 
+  checkCurrDuration = () => {
+    const { workTimerOn, workDuration, shortBreakDuration, longBreakDuration, workCycle } = this.state;
+
+    if (!workTimerOn && workCycle < 4) return shortBreakDuration;
+    if (!workTimerOn && workCycle === 4) return longBreakDuration;
+
+    return workDuration;
+  }
+
+  startTimer = duration => {
     let timer = duration;
 
-    setInterval(() => {
-      let minutes = parseInt(timer / 60);
-      let seconds = parseInt(timer % 60);
+    this.setState({ timerRunning: true });
 
-      minutes = minutes < 10 ? '0' + minutes : minutes;
-      seconds = seconds < 10 ? '0' + seconds : seconds;
+    const countdown = setInterval(() => {
+      let { playButtonOn, timerRunning, workTimerOn, workCycle } = this.state;
+      let minutes = this.addLeadingZero(parseInt(timer / 60));
+      let seconds = this.addLeadingZero(parseInt(timer % 60));
 
-      if (this.state.timerRunning) this.setState({ display: minutes + ':' + seconds });
+      if (timerRunning) this.setState({ display: minutes + ':' + seconds });
+      else clearInterval(countdown);
 
-      if (--timer < 0) {
-        timer = duration;
+      if (timer-- < 0) timer = duration;
+      // timer decrements to -1 with lead zero. go to this rather than 0, so we can stay at 0 for a second.
+      if (seconds === '0-1') {
+        clearInterval(countdown);
+
+        this.setState({ 
+          playButtonOn: !playButtonOn,
+          workCycle: workCycle === 4 ? 1 : workCycle++,
+          workTimerOn: !workTimerOn
+        });
+        this.setState({ display: this.addLeadingZero(this.checkCurrDuration()) + ':00' });
       }
     }, 1000);
   }
 
-  // resetTimer = duration => {
-  // }
+  resetTimer = duration => {
+    this.setState({
+      timerRunning: false,
+      display: this.addLeadingZero(duration/60) + ':00'
+    });
+  }
 
   playOrStop = (e) => {
-    const { playButtonOn, currTimer, workDuration, shortBreakDuration, longBreakDuration } = this.state;
+    const { playButtonOn } = this.state;
     
-    let duration = workDuration * 60;
-    if (currTimer === 'short') duration = shortBreakDuration * 60;
-    if (currTimer === 'long') duration = longBreakDuration * 60;
+    let duration = this.checkCurrDuration() * 60;
 
-    if (playButtonOn) {
-      this.startTimer(duration);
-    }
-    // else resetTimer(duration);
+    if (playButtonOn) this.startTimer(duration);
+    else this.resetTimer(duration);
+
     this.setState({ playButtonOn: !playButtonOn });
   }
 
