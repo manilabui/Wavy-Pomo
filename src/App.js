@@ -14,9 +14,9 @@ class App extends Component {
       timerRunning: false,
       display: '25:00',
       workTimerOn: true,
-      workDuration: 25,
-      shortBreakDuration: 5,
-      longBreakDuration: 15,
+      workDuration: 1,
+      shortBreakDuration: 1,
+      longBreakDuration: 1,
       workCycle: 1
     }
   }
@@ -34,7 +34,10 @@ class App extends Component {
 
   // alarm sound function
 
-  // get quote function
+  getQuote = () =>
+    fetch(`https://api.kanye.rest`)
+    .then(r => r.json())
+    .then(({quote}) => this.setState({ quote }))
 
   startTimer = duration => {
     let timer = duration;
@@ -51,17 +54,21 @@ class App extends Component {
 
       if (timer-- < 0) timer = duration;
 
-      // if (minutes === '00' && seconds = '00') play alarm sound & change quote if it's the end of a work session
-      
-      // timer decrements to -1 with lead zero. clear here rather than at 0, so we can stay at 0 for a second.
+      // TODO: play alarm sound
+      if (minutes === '00' && seconds === '00' && workCycle === 4) this.getQuote()
+
+      // timer decrements to -1 with lead zero. 
+      // clear here rather than at 0, so we can stay at 0 for a second.
       if (seconds === '0-1') {
         clearInterval(countdown);
-        this.setState({ 
+
+        if (workTimerOn) this.setState({ workCycle: workCycle === 4 ? 1 : workCycle + 1 });
+
+        this.setState({
+          display: this.addLeadingZero(this.checkCurrDuration()) + ':00',
           playButtonOn: !playButtonOn,
-          workCycle: workCycle === 4 ? 1 : workCycle++,
           workTimerOn: !workTimerOn
         });
-        this.setState({ display: this.addLeadingZero(this.checkCurrDuration()) + ':00' });
       }
     }, 1000);
   }
