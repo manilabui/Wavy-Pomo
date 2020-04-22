@@ -32,6 +32,10 @@ class App extends Component {
     return workDuration;
   }
 
+  // alarm sound function
+
+  // get quote function
+
   startTimer = duration => {
     let timer = duration;
 
@@ -46,10 +50,12 @@ class App extends Component {
       else clearInterval(countdown);
 
       if (timer-- < 0) timer = duration;
-      // timer decrements to -1 with lead zero. go to this rather than 0, so we can stay at 0 for a second.
+
+      // if (minutes === '00' && seconds = '00') play alarm sound & change quote if it's the end of a work session
+      
+      // timer decrements to -1 with lead zero. clear here rather than at 0, so we can stay at 0 for a second.
       if (seconds === '0-1') {
         clearInterval(countdown);
-
         this.setState({ 
           playButtonOn: !playButtonOn,
           workCycle: workCycle === 4 ? 1 : workCycle++,
@@ -67,9 +73,8 @@ class App extends Component {
     });
   }
 
-  playOrStop = (e) => {
+  playOrStop = e => {
     const { playButtonOn } = this.state;
-    
     let duration = this.checkCurrDuration() * 60;
 
     if (playButtonOn) this.startTimer(duration);
