@@ -5,7 +5,7 @@ class Timer extends Component {
   render() {
     return (
       <div className='c-container relative center mw5-ns w-50 mt4 mb4 mb3-ns'>
-      	<div className='absolute w-100 tc tracked f2-ns f3 fw2 pa5 mv4-ns mv3 white'>{ this.props.display }</div>
+      	<div className='c-text absolute w-100 tc tracked f2-ns f3 fw2 pa5 mv4-ns mv3 white'>{ this.props.display }</div>
       	<small className='absolute w-100 tc i f5-ns f6 mv5 pa2 mt6-ns gray'>minutes</small>
         <svg className='w-100' id='c-graphic' viewBox='0 0 100 100'>
 	        <path id='bg' strokeLinecap='round' strokeWidth='4' stroke='#212b37' fill='none' d='M50 2 
