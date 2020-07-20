@@ -14,9 +14,9 @@ class App extends Component {
       timerRunning: false,
       display: '25:00',
       workTimerOn: true,
-      workDuration: 1,
-      shortBreakDuration: 1,
-      longBreakDuration: 1,
+      workDuration: 25,
+      shortBreakDuration: 5,
+      longBreakDuration: 15,
       workCycle: 1
     }
   }
@@ -49,8 +49,7 @@ class App extends Component {
       let minutes = this.addLeadingZero(parseInt(timer / 60));
       let seconds = this.addLeadingZero(parseInt(timer % 60));
 
-      if (timerRunning) this.setState({ display: minutes + ':' + seconds });
-      else clearInterval(countdown);
+      timerRunning ? this.setState({ display: minutes + ':' + seconds }) : clearInterval(countdown);
 
       if (timer-- < 0) timer = duration;
 
@@ -84,8 +83,7 @@ class App extends Component {
     const { playButtonOn } = this.state;
     let duration = this.checkCurrDuration() * 60;
 
-    if (playButtonOn) this.startTimer(duration);
-    else this.resetTimer(duration);
+    playButtonOn ? this.startTimer(duration) : this.resetTimer(duration);
 
     this.setState({ playButtonOn: !playButtonOn });
   }
